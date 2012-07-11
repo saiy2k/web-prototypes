@@ -7,7 +7,7 @@
         var VALIDURL    =   'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=';
         var SCOPE       =   'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email';
         var CLIENTID    =   '716569014051-i28hbmpufoh644p94mq2c9h84hb4vvhd.apps.googleusercontent.com';
-        var REDIRECT    =   'http://localhost:8888/MAMP/web-prototypes/googleapi/oauth'
+        var REDIRECT    =   'http://localhost:8888/MAMP/web-prototypes/googleapi/oauth/'
         var LOGOUT      =   'http://accounts.google.com/Logout';
         var TYPE        =   'token';
         var _url        =   OAUTHURL + 'scope=' + SCOPE + '&client_id=' + CLIENTID + '&redirect_uri=' + REDIRECT + '&response_type=' + TYPE;
@@ -22,9 +22,6 @@
             var win         =   window.open(_url, "windowname1", 'width=800, height=600'); 
 
             var pollTimer   =   window.setInterval(function() { 
-                console.log(win);
-                console.log(win.document);
-                console.log(win.document.URL);
                 if (win.document.URL.indexOf(REDIRECT) != -1) {
                     window.clearInterval(pollTimer);
                     var url =   win.document.URL;
