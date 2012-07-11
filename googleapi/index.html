@@ -6,15 +6,18 @@
         var OAUTHURL    =   'https://accounts.google.com/o/oauth2/auth?';
         var VALIDURL    =   'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=';
         var SCOPE       =   'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email';
-        var CLIENTID    =   '716569014051.apps.googleusercontent.com';
-        var REDIRECT    =   'http://www.gethugames.in/proto/googleapi/oauth'
+        var CLIENTID    =   '716569014051-i28hbmpufoh644p94mq2c9h84hb4vvhd.apps.googleusercontent.com';
+        var REDIRECT    =   'http://localhost:8888/MAMP/web-prototypes/googleapi/oauth'
+        var LOGOUT      =   'http://accounts.google.com/Logout';
         var TYPE        =   'token';
         var _url        =   OAUTHURL + 'scope=' + SCOPE + '&client_id=' + CLIENTID + '&redirect_uri=' + REDIRECT + '&response_type=' + TYPE;
         var acToken;
         var tokenType;
         var expiresIn;
         var user;
+        var loggedIn    =   false;
 
+    
         function login() {
             var win         =   window.open(_url, "windowname1", 'width=800, height=600'); 
 
@@ -32,7 +35,7 @@
 
                     validateToken(acToken);
                 }
-            }, 100);
+            }, 500);
         }
 
         function validateToken(token) {
@@ -41,6 +44,9 @@
                 data: null,
                 success: function(responseText){  
                     getUserInfo();
+                    loggedIn = true;
+                    $('#loginText').hide();
+                    $('#logoutText').show();
                 },  
                 dataType: "jsonp"  
             });
@@ -53,23 +59,11 @@
                 success: function(resp) {
                     user    =   resp;
                     console.log(user);
-                    $('#uName').append(user.name);
+                    $('#uName').text('Welcome ' + user.name);
                     $('#imgHolder').attr('src', user.picture);
                 },
                 dataType: "jsonp"
             });
-
-            /*
-            $.ajax({
-                url: 'https://www.googleapis.com/plus/v1/people/me',
-                data: null,
-                success: function(resp) {
-                    console.log('me obj');
-                    console.log(resp);
-                },
-                dataType: 'jsonp'
-            });
-            */
         }
 
         //credits: http://www.netlobo.com/url_query_string_javascript.html
@@ -84,12 +78,22 @@
                 return results[1];
         }
 
+        function startLogoutPolling() {
+            $('#loginText').show();
+            $('#logoutText').hide();
+            loggedIn = false;
+            $('#uName').text('Welcome ');
+            $('#imgHolder').attr('src', 'none.jpg');
+        }
+
     </script>
 </head>
 
 <body>
-    <a href='#' onClick='login();'> click here to login </a>
-    <div id='uName'>Welcome  </div>
+    <a href='#' onClick='login();' id="loginText"'> Click here to login </a>
+    <a href="#" style="display:none" id="logoutText" target='myIFrame' onclick="myIFrame.location='https://www.google.com/accounts/Logout'; startLogoutPolling();return false;"> Click here to logout </a>
+    <iframe name='myIFrame' id="myIFrame" style='display:none'></iframe>
+    <div id='uName'></div>
     <img src='' id='imgHolder'/>
 </body>
-</htmle>
+</html>
